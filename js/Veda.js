@@ -1,81 +1,45 @@
-function Veda(id, perspective, projectionMode, width, height, color) {
-	document.querySelector(id).style.background = color;
-	document.querySelector(id).style.height = height + "px";
-	document.querySelector(id).style.margin = 0;
-	document.querySelector(id).style.overflow = "hidden";
-	document.querySelector(id).style.padding = 0;
-	document.querySelector(id).style.width = width + "px";
-	
-	document.querySelector(id).style.webkitPerspective = perspective;
-	document.querySelector(id).style.webkitTransformStyle = projectionMode;
-}
+function Veda() {}
 
 Veda.prototype = {
-	animateGeometry: function(geometry, animLink, duration, type, animCode) {
-		document.querySelector("style").innerHTML += "@keyframes " + animLink +
-			"{" +
-			animCode +
-			"}";
-		geometry.style.animation = animLink + " " + duration + " " + type;
+	addWall: function(parent, wall) {
+		document.querySelector(parent).appendChild(wall);
 	},
-	antialias: function(geometry) {
-		geometry.style.outline = "1px solid Transparent";
-	},
-	backfaceCulling: function(geometry, value) {
-		geometry.style.zIndex = value;
-	},
-	breakAnimGeometry: function(geometry, end, type, axis, matrix, elem, unit) {
-		var start = Date.now();
+	initWall: function() {
+		var wall = document.createElement("div");
 		
-		window.requestAnimationFrame(function animateGeometry(time) {
-			var passed = time - start;
-			
-			if (passed > end) {
-				passed = time;
-				geometry.style.WebkitTransform = "";
-			}
-			
-			geometry.style.WebkitTransform = type + axis + "(" + matrix[elem]++ + unit + ")";
-			
-			if (passed < end) {
-				window.requestAnimationFrame(animateGeometry);
-			}
-		});
-	},
-	createGeometry: function(width, height, color, path) {
-		var geometry = document.createElement("span");
+		wall.className = "Wall";
 		
-		geometry.style.background = color;
-		geometry.style.display = "block";
-		geometry.style.height = height + "px";
-		geometry.style.clipPath = "polygon(" + path + ")";
-		geometry.style.width = width + "px";
+		wall.style.left = (window.innerWidth / 4 - wall.style.width / 2) + "px";
+		wall.style.position = "absolute";
+		wall.style.top = (window.innerHeight / 4 - wall.style.height / 2) + "px";
 		
-		return geometry;
+		return wall;
 	},
-	geometryMaterial: function(geometry, material) {
-		geometry.style.background = material;
+	rotateWall: function(wall, rx, ry, rz) {
+		wall.style.WebkitTransform += "rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
 	},
-	render: function(id, geometry) {
-		document.querySelector(id).appendChild(geometry);
+	translateWall: function(wall, tx, ty, tz) {
+		wall.style.WebkitTransform += "translateX(" + tx + "px) translateY(" + -ty + "px) translateZ(" + -tz + "px)";
 	},
-	rotateCamera: function(id, rx, ry, rz) {
-		document.querySelector(id + " *").style.WebkitTransform += "rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
+	setMaterial: function(wall, url) {
+		wall.style.background = "url(" + url + ")";
 	},
-	rotateGeometry: function(geometry, rx, ry, rz) {
-		geometry.style.WebkitTransform += "rotateX(" + rx + "deg) rotateY(" + ry + "deg) rotateZ(" + rz + "deg)";
-	},
-	scaleGeometry: function(geometry, sx, sy, sz) {
-		geometry.style.WebkitTransform += "scaleX(" + sx + ") " + "scaleY(" + sy + ") scaleZ(" + sz + ")";
-	},
-	translateGeometry: function(geometry, tx, ty, tz) {
-		geometry.style.WebkitTransform += "translateX(" + tx + "px) translateY(" + ty + "px) translateZ(" + tz + "px)";
-	},
-	wireframes: function(geometry, bool, color) {
-		if (bool == true) {
-			geometry.style.border = "1px solid " + color;
-		} else {
-			geometry.style.border = "none";
-		}
+	setSize: function(wall, width, height) {
+		wall.style.height = height + "px";
+		wall.style.width = width + "px";
+	}
+};
+
+Veda.prototype.GUI = {
+	Button: function(parent, options) {
+		var button = document.createElement("button");
+		
+		button.innerText = options.text;
+		
+		button.onclick = options.click;
+		
+		button.style.cssText;
+		
+		document.querySelector(parent).appendChild(button);
 	}
 };
